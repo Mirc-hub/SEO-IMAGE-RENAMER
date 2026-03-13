@@ -17,7 +17,7 @@
 ## Priorità Bassa
 
 - [ ] Crawl pagina web (inserisci URL pagina, estrai automaticamente tutte le immagini)
-- [ ] Confronto before/after (diff visuale nome originale vs nome SEO)
-- [ ] Multi-lingua prompt (switch italiano/inglese/spagnolo per il system prompt)
-- [ ] Rate limit configurabile (slider delay tra richieste, per piani Gemini a pagamento)
+- [x] Confronto before/after (diff visuale nome originale vs nome SEO)
+- [x] Multi-lingua prompt (switch italiano/inglese/spagnolo per il system prompt)
+- [x] Rate limit configurabile (slider delay tra richieste, per piani Gemini a pagamento)
 - [ ] Webhook/notifica browser a fine analisi batch lungo
