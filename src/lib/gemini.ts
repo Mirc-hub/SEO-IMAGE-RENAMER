@@ -8,6 +8,18 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function sanitizeFilename(filename: string): string {
+  const ext = filename.substring(filename.lastIndexOf("."));
+  const name = filename.substring(0, filename.lastIndexOf("."));
+  const sanitized = name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // remove diacritics
+    .replace(/[^a-z0-9-]/g, "-")    // keep only a-z, 0-9, hyphens
+    .replace(/-+/g, "-")            // collapse multiple hyphens
+    .replace(/^-|-$/g, "");         // trim leading/trailing hyphens
+  return (sanitized || "unnamed") + ext;
+}
+
 export async function analyzeImage(
   apiKey: string,
   model: string,
@@ -45,7 +57,7 @@ export async function analyzeImage(
 
       const result = JSON.parse(text);
       return {
-        filename: result.filename || "unnamed.jpg",
+        filename: sanitizeFilename(result.filename || "unnamed.jpg"),
         alt_text: result.alt_text || "",
       };
     } catch (error: unknown) {

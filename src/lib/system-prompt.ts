@@ -13,7 +13,8 @@ basandoti sui soggetti rilevati e sulle keyword fornite dall'utente.
 4. Genera il nome file ottimizzato seguendo le regole SEO
 
 ## REGOLE PER IL NOME FILE SEO
-- Solo lettere minuscole
+- Solo lettere minuscole ASCII (a-z), numeri (0-9) e trattini (-)
+- MAI usare accenti, caratteri accentati o speciali (es: à, è, ì, ò, ù, ñ, ü, ö, ß, ç ecc.) — sostituiscili con la lettera base (a, e, i, o, u, n, u, o, s, c)
 - Separa le parole con trattini (-), mai underscore o spazi
 - Lunghezza ideale: 3-6 parole significative
 - Dove possibile, crea pertinenza con le parole chiave o argomenti correlati
@@ -47,7 +48,8 @@ based on detected subjects and the keywords provided by the user.
 4. Generate the optimized filename following SEO rules
 
 ## SEO FILENAME RULES
-- Lowercase letters only
+- ASCII lowercase letters only (a-z), numbers (0-9) and hyphens (-)
+- NEVER use accents, accented characters or special characters (e.g.: à, è, ì, ò, ù, ñ, ü, ö, ß, ç etc.) — replace them with the base letter (a, e, i, o, u, n, u, o, s, c)
 - Separate words with hyphens (-), never underscores or spaces
 - Ideal length: 3-6 meaningful words
 - Where possible, create relevance with keywords or related topics
@@ -81,7 +83,8 @@ basándote en los sujetos detectados y las keywords proporcionadas por el usuari
 4. Genera el nombre de archivo optimizado siguiendo las reglas SEO
 
 ## REGLAS PARA EL NOMBRE DE ARCHIVO SEO
-- Solo letras minúsculas
+- Solo letras minúsculas ASCII (a-z), números (0-9) y guiones (-)
+- NUNCA usar acentos, caracteres acentuados o especiales (ej: á, é, í, ó, ú, ñ, ü, ö, ß, ç etc.) — reemplázalos con la letra base (a, e, i, o, u, n, u, o, s, c)
 - Separa las palabras con guiones (-), nunca guiones bajos o espacios
 - Longitud ideal: 3-6 palabras significativas
 - Donde sea posible, crea relevancia con las palabras clave o temas relacionados
