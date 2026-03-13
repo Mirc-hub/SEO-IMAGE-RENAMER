@@ -9,8 +9,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Copy, Pencil } from "lucide-react";
+import { Copy, Pencil, ClipboardCopy } from "lucide-react";
 import type { AnalysisResult } from "@/lib/types";
 
 interface ResultsTableProps {
@@ -18,9 +19,9 @@ interface ResultsTableProps {
   onResultUpdate?: (index: number, field: "seoName" | "altText", value: string) => void;
 }
 
-function copyToClipboard(text: string) {
+function copyToClipboard(text: string, label?: string) {
   navigator.clipboard.writeText(text);
-  toast.success("Copiato!");
+  toast.success(label || "Copiato!");
 }
 
 function EditableCell({
@@ -93,35 +94,74 @@ function EditableCell({
 export function ResultsTable({ results, onResultUpdate }: ResultsTableProps) {
   if (results.length === 0) return null;
 
+  const copyAllSeoNames = () => {
+    const text = results.map((r) => r.seoName).join("\n");
+    copyToClipboard(text, `${results.length} nomi SEO copiati!`);
+  };
+
+  const copyAllAltTexts = () => {
+    const text = results.map((r) => r.altText).join("\n");
+    copyToClipboard(text, `${results.length} alt text copiati!`);
+  };
+
+  const copyRowAsHtml = (r: AnalysisResult) => {
+    const html = `<img src="${r.seoName}" alt="${r.altText}" />`;
+    copyToClipboard(html, "HTML <img> copiato!");
+  };
+
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Nome Originale</TableHead>
-            <TableHead>Nome SEO</TableHead>
-            <TableHead>Alt Text</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {results.map((r, i) => (
-            <TableRow key={i}>
-              <TableCell className="text-muted-foreground">
-                {r.originalName}
-              </TableCell>
-              <EditableCell
-                value={r.seoName}
-                isPrimary
-                onSave={(v) => onResultUpdate?.(i, "seoName", v)}
-              />
-              <EditableCell
-                value={r.altText}
-                onSave={(v) => onResultUpdate?.(i, "altText", v)}
-              />
+    <div className="space-y-2">
+      <div className="flex gap-2">
+        <Button variant="outline" size="sm" onClick={copyAllSeoNames}>
+          <ClipboardCopy className="h-3 w-3 mr-1" />
+          Copia tutti i nomi SEO
+        </Button>
+        <Button variant="outline" size="sm" onClick={copyAllAltTexts}>
+          <ClipboardCopy className="h-3 w-3 mr-1" />
+          Copia tutti gli alt text
+        </Button>
+      </div>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nome Originale</TableHead>
+              <TableHead>Nome SEO</TableHead>
+              <TableHead>Alt Text</TableHead>
+              <TableHead className="w-10"></TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {results.map((r, i) => (
+              <TableRow key={i}>
+                <TableCell className="text-muted-foreground">
+                  {r.originalName}
+                </TableCell>
+                <EditableCell
+                  value={r.seoName}
+                  isPrimary
+                  onSave={(v) => onResultUpdate?.(i, "seoName", v)}
+                />
+                <EditableCell
+                  value={r.altText}
+                  onSave={(v) => onResultUpdate?.(i, "altText", v)}
+                />
+                <TableCell className="p-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 w-7 p-0"
+                    title="Copia come <img> HTML"
+                    onClick={() => copyRowAsHtml(r)}
+                  >
+                    <Copy className="h-3 w-3" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
