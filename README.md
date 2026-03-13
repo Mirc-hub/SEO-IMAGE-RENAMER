@@ -1,51 +1,80 @@
-# SEO Image Renamer — Gemini AI
+# SEO Image Renamer — Web App (Next.js)
 
-SEO Image Renamer è un'applicazione desktop sviluppata in Python con interfaccia grafica (GUI) in Tkinter. Utilizza l'intelligenza artificiale di Google (Gemini API) per analizzare le tue immagini e generare automaticamente nomi file ottimizzati per la SEO e testi alternativi (Alt Text) pertinenti.
+Versione web app del tool SEO Image Renamer. Utilizza Google Gemini AI per analizzare immagini e generare automaticamente nomi file ottimizzati per la SEO e testi alternativi (Alt Text).
 
-## 🌟 Funzionalità
+> Cerchi la versione desktop in Python? Passa al branch [`main`](https://github.com/Mirc-hub/SEO-IMAGE-RENAMER/tree/main).
 
-- **Interfaccia Grafica Intuitiva**: Design chiaro e moderno, facile da utilizzare senza conoscenze tecniche.
-- **Supporto Multiplo**: Puoi analizzare immagini provenienti da una **cartella locale** oppure indicando gli **URL diretti** delle immagini sul web.
-- **Personalizzazione SEO**: Inserisci le keyword del cliente e, opzionalmente, il link del sito web per fornire un contesto mirato all'Intelligenza Artificiale.
-- **Riconoscimento Visivo Intelligente**: Utilizzando Gemini, l'applicazione "guarda" l'immagine e formula un nome file (es. `nome-file-seo.jpg`) e un attributo un Alt Text ideali.
-- **Gestione Duplicati**: Aggiunge automaticamente un suffisso incrementale per evitare di sovrascrivere immagini qualora vengano generati nomi uguali.
-- **Esportazione Flessibile**: Puoi salvare i risultati dell'analisi come report in formato **CSV** oppure scaricare direttamente un archivio **ZIP** con tutte le foto fisicamente già rinominate.
+## Funzionalita
 
-## 📋 Prerequisiti
+- **Upload drag & drop** o inserimento URL immagini (interfaccia a tab)
+- **Keyword SEO personalizzabili** e URL sito per contesto
+- **Selezione modello Gemini** tramite dropdown (es. Flash Lite, Flash 2.0)
+- **Tabella risultati interattiva** con click-to-copy su nomi SEO e alt text
+- **Export CSV** della tabella risultati
+- **Export ZIP** con le immagini rinominate con i nomi SEO
+- **Log in tempo reale** con progresso dell'analisi
+- **Gestione duplicati** automatica (suffisso incrementale)
+- **Retry automatico** su errori 429 (rate limit) con backoff
 
-Per eseguire l'applicazione assicurati di avere installato:
-- **Python 3.8 o superiore**
-- Una **chiave API valida** di Google Gemini (ottenibile gratuitamente su [Google AI Studio](https://aistudio.google.com/)).
+## Tech Stack
 
-## 🚀 Installazione
+- Next.js 16 (App Router)
+- React + TypeScript
+- shadcn/ui + Tailwind CSS
+- sharp (image processing server-side)
+- @google/generative-ai (Gemini SDK)
+- JSZip (generazione ZIP client-side)
 
-1. Posizionati nella directory contenente il file `seo_image_renamer.py`.
-2. Apri il prompt dei comandi o il terminale in questa cartella.
-3. Installa i pacchetti Python necessari (librerie esterne) con questo comando:
-   ```bash
-   pip install requests pillow google-generativeai
-   ```
-*(Nota: la GUI è basata su `tkinter`, che in genere è già preinstallato con Python su Windows. Le altre librerie come `json`, `csv`, `zipfile`, e `threading` fanno parte della standard library di Python).*
+## Prerequisiti
 
-## 💻 Come Utilizzare l'Applicazione
+- **Node.js 20+**
+- Una **chiave API** di Google Gemini ([Google AI Studio](https://aistudio.google.com/))
 
-1. Avvia il programma eseguendo il file da terminale:
-   ```bash
-   python seo_image_renamer.py
-   ```
-2. **Configurazione Iniziale**: Inserisci la tua **API Key Gemini** nel campo apposito (obbligatorio). Se lo desideri, puoi aggiungere anche il link del sito web (opzionale).
-3. **Keyword**: Specifica le parole chiave target su cui intendi concentrarti per la SEO (una per riga, o separate da virgola).
-4. **Input Immagini**: 
-   - Clicca su **"Sfoglia..."** per selezionare una cartella nel tuo computer contenente le immagini da ottimizzare.
-   - *Oppure* incolla uno o più **URL** di immagini online nell'area testo di destra.
-   - Formati supportati: `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`.
-5. Fai clic su **"🚀 Avvia Analisi"**. 
-6. Attendi l'elaborazione. L'andamento sarà visibile nella barra di caricamento e nel log testuale a schermo. I risultati appariranno a fine processo nella tabella centrale.
-7. **Esportazione**:
-   - Clicca **"Scarica CSV"** per salvare una tabella riassuntiva (Nome Originale, Nuovo Nome SEO, Alt Text).
-   - Clicca **"Scarica ZIP"** per comprimere e scaricare tutte le immagini elaborate e già modificate con il loro nuovo nome ottimizzato.
+## Installazione
 
-## ⚠️ Note
+```bash
+npm install
+```
 
-- **Limiti di Rete (Rate Limit / Errori 429)**: Se l'API restituisce un errore dovuto al superamento della quota (limite di richieste della versione gratuita), il programma inserirà un ritardo automatico di 30 secondi e tenterà di nuovo la richiesta (fino a 3 tentativi) prima di saltare l'immagine.
-- **Dimensioni File**: Per ottimizzare le chiamate cloud (sia nei tempi che nel consumo di token delle API), le immagini locali e quelle scaricate dagli URL vengono internamente convertite e ridimensionate (in memoria) a un formato ridotto (800x800px formato JPEG) solo prima di inviarle per l'analisi. Nello scaricare l'archivio ZIP, le immagini originarie *non subiscono riduzioni* qualitative; viene applicata solo la rinominazione.
+Crea il file `.env.local` con la tua API key:
+
+```bash
+cp .env.example .env.local
+```
+
+Modifica `.env.local` e inserisci la tua chiave:
+
+```
+GEMINI_API_KEY=la-tua-chiave-api
+```
+
+## Avvio in locale
+
+```bash
+npm run dev
+```
+
+Apri [http://localhost:3000](http://localhost:3000) nel browser.
+
+## Deploy su Vercel
+
+1. Collega il repository a [Vercel](https://vercel.com)
+2. Seleziona il branch `feat/webapp-nextjs`
+3. Aggiungi la variabile d'ambiente `GEMINI_API_KEY` nelle impostazioni del progetto
+4. Deploy
+
+## Come funziona
+
+1. Seleziona il **modello Gemini** dal dropdown
+2. Inserisci le **keyword SEO** (una per riga o separate da virgola)
+3. Carica le immagini tramite **drag & drop** o incolla gli **URL** (uno per riga)
+4. Clicca **"Avvia Analisi"** — le immagini vengono analizzate una alla volta con un delay di 4.5s tra le richieste
+5. I risultati appaiono in tabella: clicca su un nome SEO o alt text per **copiarlo**
+6. Esporta con **"Scarica CSV"** o **"Scarica ZIP (immagini rinominate)"**
+
+## Note
+
+- **Rate Limit**: il delay di 4.5s tra le richieste rispetta il limite free tier di Gemini (~15 req/min). In caso di errore 429, il sistema ritenta automaticamente fino a 3 volte con backoff crescente (30s, 60s, 90s).
+- **Qualita immagini**: le immagini vengono ridimensionate a 800x800px e compresse in JPEG solo per l'invio all'API. Lo ZIP contiene le immagini originali con i nuovi nomi.
+- **API Key**: la chiave Gemini resta server-side (env variable), non viene mai esposta al client.
+- Formati supportati: `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`
