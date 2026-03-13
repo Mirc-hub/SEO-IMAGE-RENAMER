@@ -72,7 +72,7 @@ export default function Home() {
           canStart={canStart}
         />
 
-        <ResultsTable results={analysis.results} />
+        <ResultsTable results={analysis.results} onResultUpdate={analysis.updateResult} />
 
         <ExportButtons results={analysis.results} />
 

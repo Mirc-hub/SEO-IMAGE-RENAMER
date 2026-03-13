@@ -202,9 +202,23 @@ export function useAnalysis() {
     );
   }, [addLog]);
 
+  const updateResult = useCallback(
+    (index: number, field: "seoName" | "altText", value: string) => {
+      setState((prev) => {
+        const updated = [...prev.results];
+        if (updated[index]) {
+          updated[index] = { ...updated[index], [field]: value };
+        }
+        return { ...prev, results: updated };
+      });
+    },
+    []
+  );
+
   return {
     ...state,
     startAnalysis,
     stopAnalysis,
+    updateResult,
   };
 }
