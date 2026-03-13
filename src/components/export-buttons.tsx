@@ -7,9 +7,10 @@ import type { AnalysisResult } from "@/lib/types";
 
 interface ExportButtonsProps {
   results: AnalysisResult[];
+  onClear?: () => void;
 }
 
-export function ExportButtons({ results }: ExportButtonsProps) {
+export function ExportButtons({ results, onClear }: ExportButtonsProps) {
   if (results.length === 0) return null;
 
   return (
@@ -28,6 +29,11 @@ export function ExportButtons({ results }: ExportButtonsProps) {
       >
         Scarica ZIP (immagini rinominate)
       </Button>
+      {onClear && (
+        <Button variant="outline" onClick={onClear}>
+          Nuova Analisi
+        </Button>
+      )}
     </div>
   );
 }

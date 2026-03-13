@@ -101,7 +101,7 @@ export default function Home() {
 
         <ResultsTable results={analysis.results} onResultUpdate={analysis.updateResult} />
 
-        <ExportButtons results={analysis.results} />
+        <ExportButtons results={analysis.results} onClear={analysis.clearSession} />
 
         <LogArea logs={analysis.logs} />
       </div>

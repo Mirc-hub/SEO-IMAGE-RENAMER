@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import type { AnalysisResult, LogEntry } from "@/lib/types";
 import type { ImageFile } from "@/components/image-input";
 import { REQUEST_DELAY_MS, SUPPORTED_EXTENSIONS } from "@/lib/constants";
+
+const STORAGE_KEY = "seo-image-renamer-session";
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -18,6 +20,42 @@ interface AnalysisState {
   total: number;
 }
 
+function loadSession(): Partial<AnalysisState> {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return {};
+    const data = JSON.parse(raw);
+    return {
+      results: data.results || [],
+      logs: data.logs || [],
+      progress: data.progress || 0,
+      current: data.current || 0,
+      total: data.total || 0,
+    };
+  } catch {
+    return {};
+  }
+}
+
+function saveSession(state: AnalysisState) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        results: state.results,
+        logs: state.logs,
+        progress: state.progress,
+        current: state.current,
+        total: state.total,
+      })
+    );
+  } catch {
+    // localStorage full or unavailable
+  }
+}
+
 export function useAnalysis() {
   const [state, setState] = useState<AnalysisState>({
     results: [],
@@ -28,7 +66,25 @@ export function useAnalysis() {
     total: 0,
   });
 
+  const initializedRef = useRef(false);
   const cancelRef = useRef(false);
+
+  // Load from localStorage on mount
+  useEffect(() => {
+    if (initializedRef.current) return;
+    initializedRef.current = true;
+    const saved = loadSession();
+    if (saved.results && saved.results.length > 0) {
+      setState((prev) => ({ ...prev, ...saved, isRunning: false }));
+    }
+  }, []);
+
+  // Save to localStorage when results change
+  useEffect(() => {
+    if (initializedRef.current && state.results.length > 0) {
+      saveSession(state);
+    }
+  }, [state]);
 
   const addLog = useCallback((message: string, level: LogEntry["level"]) => {
     setState((prev) => ({
@@ -215,10 +271,25 @@ export function useAnalysis() {
     []
   );
 
+  const clearSession = useCallback(() => {
+    setState({
+      results: [],
+      logs: [],
+      isRunning: false,
+      progress: 0,
+      current: 0,
+      total: 0,
+    });
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }, []);
+
   return {
     ...state,
     startAnalysis,
     stopAnalysis,
     updateResult,
+    clearSession,
   };
 }
