@@ -11,6 +11,7 @@ interface ActionBarProps {
   onStart: () => void;
   onStop: () => void;
   canStart: boolean;
+  delayMs?: number;
 }
 
 export function ActionBar({
@@ -21,6 +22,7 @@ export function ActionBar({
   onStart,
   onStop,
   canStart,
+  delayMs = 4500,
 }: ActionBarProps) {
   return (
     <div className="flex items-center gap-3">
@@ -41,7 +43,7 @@ export function ActionBar({
             {current}/{total} immagini elaborate
             {isRunning && current < total && (() => {
               const remaining = total - current;
-              const seconds = Math.ceil(remaining * 4.5);
+              const seconds = Math.ceil(remaining * (delayMs / 1000));
               const min = Math.floor(seconds / 60);
               const sec = seconds % 60;
               return ` — ~${min > 0 ? `${min}m ` : ""}${sec}s rimanenti`;

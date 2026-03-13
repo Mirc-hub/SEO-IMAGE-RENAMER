@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { analyzeImage } from "@/lib/gemini";
+import type { PromptLanguage } from "@/lib/system-prompt";
 import type { AnalyzeRequest, AnalyzeResponse } from "@/lib/types";
 
 export async function POST(request: NextRequest) {
@@ -13,7 +14,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body: AnalyzeRequest = await request.json();
-    const { imageBase64, keywords, siteUrl, model } = body;
+    const { imageBase64, keywords, siteUrl, model, language } = body;
 
     if (!imageBase64) {
       return NextResponse.json(
@@ -29,7 +30,8 @@ export async function POST(request: NextRequest) {
       model,
       imageBuffer,
       keywords,
-      siteUrl
+      siteUrl,
+      (language as PromptLanguage) || "it"
     );
 
     return NextResponse.json(result);

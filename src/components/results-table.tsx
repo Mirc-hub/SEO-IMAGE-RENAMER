@@ -164,7 +164,9 @@ export function ResultsTable({ results, onResultUpdate }: ResultsTableProps) {
             {filteredWithIndex.map((r) => (
               <TableRow key={r.originalIndex}>
                 <TableCell className="text-muted-foreground">
-                  {r.originalName}
+                  <span className="line-through opacity-60 text-xs">{r.originalName}</span>
+                  <br />
+                  <span className="text-xs text-emerald-600 font-medium">{r.seoName}</span>
                 </TableCell>
                 <EditableCell
                   value={r.seoName}

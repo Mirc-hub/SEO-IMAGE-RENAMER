@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { buildSystemPrompt } from "./system-prompt";
+import { buildSystemPrompt, type PromptLanguage } from "./system-prompt";
 import { prepareImageForAnalysis } from "./image-processing";
 import { MAX_RETRIES, INITIAL_RETRY_WAIT_MS } from "./constants";
 import type { AnalyzeResponse } from "./types";
@@ -13,12 +13,13 @@ export async function analyzeImage(
   model: string,
   imageBuffer: Buffer,
   keywords: string,
-  siteUrl: string
+  siteUrl: string,
+  language: PromptLanguage = "it"
 ): Promise<AnalyzeResponse> {
   const genAI = new GoogleGenerativeAI(apiKey);
   const geminiModel = genAI.getGenerativeModel({ model });
 
-  const systemPrompt = buildSystemPrompt(keywords, siteUrl);
+  const systemPrompt = buildSystemPrompt(keywords, siteUrl, language);
   const compressedImage = await prepareImageForAnalysis(imageBuffer);
 
   let retryWait = INITIAL_RETRY_WAIT_MS;

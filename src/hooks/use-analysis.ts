@@ -3,7 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import type { AnalysisResult, LogEntry } from "@/lib/types";
 import type { ImageFile } from "@/components/image-input";
-import { REQUEST_DELAY_MS, SUPPORTED_EXTENSIONS } from "@/lib/constants";
+import { SUPPORTED_EXTENSIONS } from "@/lib/constants";
 
 const STORAGE_KEY = "seo-image-renamer-session";
 
@@ -99,7 +99,9 @@ export function useAnalysis() {
       urlsRaw: string,
       keywords: string,
       siteUrl: string,
-      model: string
+      model: string,
+      language: string = "it",
+      delayMs: number = 4500
     ) => {
       cancelRef.current = false;
 
@@ -186,6 +188,7 @@ export function useAnalysis() {
               keywords,
               siteUrl,
               model,
+              language,
             }),
           });
 
@@ -237,7 +240,7 @@ export function useAnalysis() {
 
         // Delay between requests (skip after last)
         if (i < total - 1 && !cancelRef.current) {
-          await sleep(REQUEST_DELAY_MS);
+          await sleep(delayMs);
         }
       }
 

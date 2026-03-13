@@ -5,6 +5,7 @@ export interface AnalyzeRequest {
   keywords: string;
   siteUrl: string;
   model: string;
+  language?: string;
 }
 
 export interface AnalyzeResponse {

@@ -12,15 +12,17 @@ import { LogArea } from "@/components/log-area";
 import { HistoryPanel } from "@/components/history-panel";
 import { useAnalysis } from "@/hooks/use-analysis";
 import { useHistory } from "@/hooks/use-history";
-import { DEFAULT_MODEL } from "@/lib/constants";
+import { DEFAULT_MODEL, DEFAULT_LANGUAGE, REQUEST_DELAY_MS } from "@/lib/constants";
 import type { AnalysisResult } from "@/lib/types";
 
 export default function Home() {
   const [model, setModel] = useState(DEFAULT_MODEL);
+  const [language, setLanguage] = useState(DEFAULT_LANGUAGE);
   const [siteUrl, setSiteUrl] = useState("");
   const [keywords, setKeywords] = useState("");
   const [files, setFiles] = useState<ImageFile[]>([]);
   const [urls, setUrls] = useState("");
+  const [delayMs, setDelayMs] = useState(REQUEST_DELAY_MS);
 
   const analysis = useAnalysis();
   const history = useHistory();
@@ -64,13 +66,12 @@ export default function Home() {
       toast.warning("Nessuna keyword inserita. L'analisi prosegue senza keyword.");
     }
 
-    analysis.startAnalysis(files, urls, keywords, siteUrl, model);
+    analysis.startAnalysis(files, urls, keywords, siteUrl, model, language, delayMs);
   };
 
   const handleLoadHistory = (results: AnalysisResult[], histKeywords: string, histModel: string) => {
     setKeywords(histKeywords);
     setModel(histModel);
-    // Load results into current view (without imageData, so ZIP won't work but CSV/copy will)
     analysis.loadResults(results);
     toast.success("Sessione caricata dalla cronologia");
   };
@@ -92,6 +93,10 @@ export default function Home() {
           onModelChange={setModel}
           siteUrl={siteUrl}
           onSiteUrlChange={setSiteUrl}
+          language={language}
+          onLanguageChange={setLanguage}
+          delayMs={delayMs}
+          onDelayChange={setDelayMs}
           disabled={analysis.isRunning}
         />
 
@@ -117,6 +122,7 @@ export default function Home() {
           onStart={handleStart}
           onStop={analysis.stopAnalysis}
           canStart={canStart}
+          delayMs={delayMs}
         />
 
         <ResultsTable results={analysis.results} onResultUpdate={analysis.updateResult} />

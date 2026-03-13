@@ -11,7 +11,18 @@ export const GEMINI_MODELS = [
 
 export const DEFAULT_MODEL = "gemini-3.1-flash-lite-preview";
 
+export const PROMPT_LANGUAGES = [
+  { value: "it", label: "Italiano" },
+  { value: "en", label: "English" },
+  { value: "es", label: "Español" },
+] as const;
+
+export const DEFAULT_LANGUAGE = "it";
+
 export const REQUEST_DELAY_MS = 4500; // 4.5s between requests
+
+export const MIN_DELAY_MS = 1000;
+export const MAX_DELAY_MS = 10000;
 
 export const MAX_RETRIES = 3;
 export const INITIAL_RETRY_WAIT_MS = 30000; // 30s, increases by 30s each retry

@@ -2,17 +2,17 @@
 
 ## Priorità Alta
 
-- [ ] Editing in-line nella tabella (modifica nome SEO e alt text prima di esportare)
-- [ ] Validazione input (feedback visivo su keyword mancanti, URL non validi, limite immagini)
-- [ ] Persistenza sessione (localStorage per non perdere risultati al refresh)
+- [x] Editing in-line nella tabella (modifica nome SEO e alt text prima di esportare)
+- [x] Validazione input (feedback visivo su keyword mancanti, URL non validi, limite immagini)
+- [x] Persistenza sessione (localStorage per non perdere risultati al refresh)
 
 ## Priorità Media
 
-- [ ] Copia intera riga (nome SEO + alt text come HTML `<img>`)
-- [ ] Bulk copy (copiare tutti gli alt text o nomi SEO in un colpo)
-- [ ] Filtro/ricerca nella tabella risultati
-- [ ] Cronologia analisi (sessioni passate rivisitabili)
-- [ ] Progress stimato (tempo rimanente basato su delay * immagini restanti)
+- [x] Copia intera riga (nome SEO + alt text come HTML `<img>`)
+- [x] Bulk copy (copiare tutti gli alt text o nomi SEO in un colpo)
+- [x] Filtro/ricerca nella tabella risultati
+- [x] Cronologia analisi (sessioni passate rivisitabili)
+- [x] Progress stimato (tempo rimanente basato su delay * immagini restanti)
 
 ## Priorità Bassa
 
