@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Copy, Pencil, ClipboardCopy } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Copy, Pencil, ClipboardCopy, Search } from "lucide-react";
 import type { AnalysisResult } from "@/lib/types";
 
 interface ResultsTableProps {
@@ -92,7 +93,20 @@ function EditableCell({
 }
 
 export function ResultsTable({ results, onResultUpdate }: ResultsTableProps) {
+  const [search, setSearch] = useState("");
+
   if (results.length === 0) return null;
+
+  const filtered = search.trim()
+    ? results.filter((r) => {
+        const q = search.toLowerCase();
+        return (
+          r.originalName.toLowerCase().includes(q) ||
+          r.seoName.toLowerCase().includes(q) ||
+          r.altText.toLowerCase().includes(q)
+        );
+      })
+    : results;
 
   const copyAllSeoNames = () => {
     const text = results.map((r) => r.seoName).join("\n");
@@ -109,9 +123,24 @@ export function ResultsTable({ results, onResultUpdate }: ResultsTableProps) {
     copyToClipboard(html, "HTML <img> copiato!");
   };
 
+  // Map filtered results to original indices
+  const filteredWithIndex = filtered.map((r) => ({
+    ...r,
+    originalIndex: results.indexOf(r),
+  }));
+
   return (
     <div className="space-y-2">
-      <div className="flex gap-2">
+      <div className="flex gap-2 flex-wrap items-center">
+        <div className="relative flex-1 min-w-[200px] max-w-xs">
+          <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Cerca nei risultati..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-8 h-8"
+          />
+        </div>
         <Button variant="outline" size="sm" onClick={copyAllSeoNames}>
           <ClipboardCopy className="h-3 w-3 mr-1" />
           Copia tutti i nomi SEO
@@ -132,19 +161,19 @@ export function ResultsTable({ results, onResultUpdate }: ResultsTableProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {results.map((r, i) => (
-              <TableRow key={i}>
+            {filteredWithIndex.map((r) => (
+              <TableRow key={r.originalIndex}>
                 <TableCell className="text-muted-foreground">
                   {r.originalName}
                 </TableCell>
                 <EditableCell
                   value={r.seoName}
                   isPrimary
-                  onSave={(v) => onResultUpdate?.(i, "seoName", v)}
+                  onSave={(v) => onResultUpdate?.(r.originalIndex, "seoName", v)}
                 />
                 <EditableCell
                   value={r.altText}
-                  onSave={(v) => onResultUpdate?.(i, "altText", v)}
+                  onSave={(v) => onResultUpdate?.(r.originalIndex, "altText", v)}
                 />
                 <TableCell className="p-1">
                   <Button
