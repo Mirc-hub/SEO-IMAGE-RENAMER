@@ -271,6 +271,17 @@ export function useAnalysis() {
     []
   );
 
+  const loadResults = useCallback((results: AnalysisResult[]) => {
+    setState({
+      results,
+      logs: [{ message: `Caricati ${results.length} risultati dalla cronologia.`, level: "info" }],
+      isRunning: false,
+      progress: 100,
+      current: results.length,
+      total: results.length,
+    });
+  }, []);
+
   const clearSession = useCallback(() => {
     setState({
       results: [],
@@ -290,6 +301,7 @@ export function useAnalysis() {
     startAnalysis,
     stopAnalysis,
     updateResult,
+    loadResults,
     clearSession,
   };
 }
