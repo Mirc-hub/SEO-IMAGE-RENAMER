@@ -39,6 +39,13 @@ export function ActionBar({
         {total > 0 && (
           <p className="text-xs text-muted-foreground">
             {current}/{total} immagini elaborate
+            {isRunning && current < total && (() => {
+              const remaining = total - current;
+              const seconds = Math.ceil(remaining * 4.5);
+              const min = Math.floor(seconds / 60);
+              const sec = seconds % 60;
+              return ` — ~${min > 0 ? `${min}m ` : ""}${sec}s rimanenti`;
+            })()}
           </p>
         )}
       </div>
