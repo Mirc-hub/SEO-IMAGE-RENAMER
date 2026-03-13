@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { ConfigSection } from "@/components/config-section";
 import { KeywordsInput } from "@/components/keywords-input";
 import { ImageInput, type ImageFile } from "@/components/image-input";
@@ -25,6 +26,32 @@ export default function Home() {
     (files.length > 0 || urls.trim().length > 0);
 
   const handleStart = () => {
+    if (files.length === 0 && urls.trim().length === 0) {
+      toast.error("Carica almeno un'immagine o inserisci un URL.");
+      return;
+    }
+
+    // Validate URLs format
+    if (urls.trim()) {
+      const urlLines = urls.split("\n").map((u) => u.trim()).filter(Boolean);
+      const invalidUrls = urlLines.filter((u) => {
+        try {
+          new URL(u);
+          return false;
+        } catch {
+          return true;
+        }
+      });
+      if (invalidUrls.length > 0) {
+        toast.error(`URL non validi: ${invalidUrls.join(", ")}`);
+        return;
+      }
+    }
+
+    if (!keywords.trim()) {
+      toast.warning("Nessuna keyword inserita. L'analisi prosegue senza keyword.");
+    }
+
     analysis.startAnalysis(files, urls, keywords, siteUrl, model);
   };
 
